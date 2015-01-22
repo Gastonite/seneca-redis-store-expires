@@ -1,5 +1,5 @@
 
-# Seneca Redis Store Expires is a Redis storage driver for [Seneca] MVP toolkit which support key expiry
+# Redis storage driver for Seneca which supports key expiry
 
 Note that this plugin was originally forked from [Seneca Redis Store](https://github.com/bamse16/seneca-redis-store). It was forked to a new plugin because:
 
