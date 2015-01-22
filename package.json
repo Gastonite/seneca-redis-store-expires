@@ -1,0 +1,40 @@
+{
+  "name": "seneca-redis-store-expires",
+  "version": "0.1.0",
+  "description": "Redis storage layer for Seneca framework which supports key expiry",
+  "main": "redis-store.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha test/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bamse16/seneca-redis-store.git"
+  },
+  "keywords": [
+    "seneca",
+    "data",
+    "store",
+    "redis",
+    "plugin"
+  ],
+  "author": "Damian Beresford (github.com/dberesford)",
+  "contributors": [
+    "Guy Ellis (https://twitter.com/wildfiction)"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "async": "0.9.0",
+    "debug": "2.1.1",
+    "lodash": "2.4.1",
+    "node-uuid": "1.4.1",
+    "seneca": "0.5.15",
+    "redis": "0.12.1"
+  },
+  "peerDependencies": {
+    "seneca": "*"
+  },
+  "devDependencies": {
+    "mocha": "~2.1.0",
+    "seneca-store-test": "^0.2.2"
+  }
+}
