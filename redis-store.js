@@ -1,6 +1,6 @@
 /*jslint node: true */
 /*
- /* Copyright (c) 2012 Marius Ursache
+/* Copyright (c) 2012 Marius Ursache
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -196,9 +196,6 @@ module.exports = function(opts) {
       if (args.hasOwnProperty('expire$')) expire = args.expire$;
       if (args.hasOwnProperty('expireAt$')) expireAt = args.expireAt$;
 
-      if (expireAt) {
-
-      }
       if (!ent.id) {
         if( ent.id$ ) {
           ent.id = ent.id$;
