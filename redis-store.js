@@ -1,6 +1,6 @@
 /*jslint node: true */
 /*
-/* Copyright (c) 2012 Marius Ursache
+ /* Copyright (c) 2012 Marius Ursache
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
@@ -178,6 +178,7 @@ module.exports = function(opts) {
      * params
      * args - of the form { ent: { id: , ..entity data..} }
      * args.expire - number of TTL seconds. If not present then looks to args.ent._expire
+     * args.expireAt - number of TTL seconds. If not present then looks to args.ent._expireAt
      * cb - callback
      */
     save: function(args, cb) {
@@ -190,8 +191,14 @@ module.exports = function(opts) {
       var canon = ent.canon$({object:true});
       var entProps = patrun.find(canon);
       var expire = entProps && entProps.hasOwnProperty('expire') ? entProps.expire : (opts.expire || 0);
-      if (args.hasOwnProperty('expire$')) expire = args.expire$;
+      var expireAt = entProps && entProps.hasOwnProperty('expireAt') ? entProps.expireAt : (opts.expireAt);
 
+      if (args.hasOwnProperty('expire$')) expire = args.expire$;
+      if (args.hasOwnProperty('expireAt$')) expireAt = args.expireAt$;
+
+      if (expireAt) {
+
+      }
       if (!ent.id) {
         if( ent.id$ ) {
           ent.id = ent.id$;
@@ -210,22 +217,32 @@ module.exports = function(opts) {
       dbConn.set(key, entp, function(err, result) {
         if (!error(args, err, cb)) {
           saveMap(dbConn, objectMap, function(err, result) {
-            if (!error(args, err, cb)) {
-              if(!expire || expire === 0) {
+
+
+            const setExpiration = function (method, value) {
+              dbConn[method](key, value, function(err, result) {
+                if(err) {
+                  debug(err);
+                  seneca.log.error(method+' failed', key, value, err)
+                }
+                debug(method+' of %d successfully set', value);
+
                 seneca.log(args.tag$,'save', result);
                 cb(null, ent);
-              } else {
-                dbConn.expire(key, expire, function(err, result) {
-                  if(err) {
-                    debug(err);
-                    seneca.log.error('expire failed', key, expire, err)
-                  }
-                  debug('expire of %d successfully set', expire);
+              });
+            }
 
-                  seneca.log(args.tag$,'save', result);
-                  cb(null, ent);
-                });
+            if (!error(args, err, cb)) {
+
+              if (expireAt)
+                return setExpiration('expireAt', expireAt);
+
+              if(!expire || expire === 0) {
+                seneca.log(args.tag$,'save', result);
+                return cb(null, ent);
               }
+
+              setExpiration('expire', expire);
             }
           });
         }
@@ -323,13 +340,13 @@ module.exports = function(opts) {
 
                   if (!_.isEmpty(q)) {
                     list = _.filter(list, function(elem, b, c) {
-                             var match = true;
-                             _.each(q, function(value, key) {
-                               var computed = (elem[key] === value);
-                               match = match && computed;
-                             });
-                             return match;
-                           });
+                      var match = true;
+                      _.each(q, function(value, key) {
+                        var computed = (elem[key] === value);
+                        match = match && computed;
+                      });
+                      return match;
+                    });
                   }
                   debug('list - returning: %o', list);
                   cb(null, list);
